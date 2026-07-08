@@ -5,6 +5,7 @@ import AxeRunner from '../components/AxeRunner';
 import ApolloProviderWrapper from '../components/ApolloProviderWrapper';
 import AuthProvider from '../components/AuthProvider';
 import ThemeToggle from '../components/ThemeToggle';
+import { ErrorBoundary } from 'react-error-boundary';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -32,6 +33,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <ErrorBoundary fallback={<main><h1>Something Went Wrong</h1></main>}>
         <AuthProvider>
           <ApolloProviderWrapper>
             <AxeRunner>
@@ -40,6 +42,7 @@ export default function RootLayout({
             </AxeRunner>
           </ApolloProviderWrapper>
         </AuthProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

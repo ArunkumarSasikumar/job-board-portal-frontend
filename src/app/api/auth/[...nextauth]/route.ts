@@ -22,17 +22,26 @@ export const authOptions: NextAuthOptions = {
       },
 
       async authorize(credentials) {
-        const email = credentials?.email;
-        const password = credentials?.password;
-        if (email === 'test@mail.com' && password === '123456') {
-          return {
-            id: '1',
-            name: 'Varun',
-            email: 'test@mail.com',
-          };
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login`, {
+          method:'POST',
+          headers:{
+            "Content-Type":"application/json",
+          },
+          body:JSON.stringify({
+            email:credentials?.email,
+            password:credentials?.password,
+          })
+        });
+        const user = await res.json();
+        if(!user){
+          throw new Error("User Not Found");
+        }
+        if(!res.ok) return null;
+        return{
+          id:user.id,
+          email:user.email
         }
 
-        return null;
       },
     }),
   ],

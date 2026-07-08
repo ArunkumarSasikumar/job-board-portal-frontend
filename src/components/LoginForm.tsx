@@ -8,26 +8,39 @@ export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const callbackUrl = searchParams.get('callbackUrl') || '/saved';
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$%&*!])(?=.*[^A-Za-z\d]).{6,}$/;
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setError('');
 
+    if(emailRegEx.test(email)===false){
+      setError("Invalid Email Format");
+      return;
+    }
+
+    if(passwordRegEx.test(password.trim())===false){
+      setError("Password must be atleast 6 characters");
+      return;
+    }
+
     const result = await signIn('credentials', {
       email,
       password,
-      redirect: false,
       callbackUrl,
     });
 
     if (result?.error) {
-      setError('Invalid email or password');
+      console.log(result);
+      setError(result.error);
       return;
     }
 
@@ -63,7 +76,7 @@ export default function LoginForm() {
           type="email"
           value={email}
           className="w-full rounded border px-3 py-2 text-[var(--text-color)]"
-
+          required
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
@@ -81,6 +94,7 @@ export default function LoginForm() {
           type="password"
           value={password}
           className="w-full rounded border px-3 py-2 text-[var(--text-color)]"
+          required
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
@@ -88,6 +102,7 @@ export default function LoginForm() {
       <button
         type="submit"
         className="w-full cursor-pointer btn rounded px-4 py-2 text-white"
+        disabled={!email || !password}
       >
         Login
       </button>

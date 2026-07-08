@@ -80,6 +80,7 @@ export default function Header({
           </a>
         </div>
         <nav className="flex flex-wrap md:flex-nowrap gap-3 items-center justify-between">
+        <Link href={'/saved'}>
           <p
             className="text-sm md:text-base text-[var(--text-color)] bg-gray-200 dark:bg-gray-700
                     border border-[var(--border-color)] px-3 py-1.5 rounded-xl whitespace-nowrap"
@@ -87,6 +88,7 @@ export default function Header({
             Saved Jobs:{' '}
             <span className="font-medium text-blue-500">{savedJobsCount}</span>
           </p>
+          </Link>
           <div className="flex-1 min-w-[200px]">
             <FilterBar
               inputValue={ipValue}

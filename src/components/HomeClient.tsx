@@ -29,14 +29,15 @@ type JobVariables = {
 };
 
 export default function HomeClient() {
-  const {data: session} = useSession();
+  const {data: session, status} = useSession();
   useEffect(()=>{
-    if(!session){
+    if(status==="loading") return;
+    if(status==="unauthenticated"){
       signIn(undefined,{
         callbackUrl:'/'
       });
     }
-  },[session]);
+  },[status]);
 
   const { data } = useQuery<JobData, JobVariables>(GET_JOBS, {
     variables: { filter: {} },

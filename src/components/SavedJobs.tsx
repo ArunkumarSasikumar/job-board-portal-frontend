@@ -8,14 +8,16 @@ export default function SavedJobs() {
   const savedJobs = useSavedJobsStore((state) => state.jobs);
   const removeJob = useSavedJobsStore((state) => state.removeJob);
   const clearAll = useSavedJobsStore((state) => state.clearAll);
+  const isSaved = savedJobs.length === 0 ? false : true;
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-6 dark:bg-gray-950 sm:px-6 lg:px-8">
       <section className="mx-auto max-w-6xl">
         <div className='mt-4 flex flex-wrap justify-between align-center'>
-        <h1 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
-          Saved Jobs
-        </h1>
-        <button className='btn float-right' onClick={() => clearAll()}>Clear All</button>
+          <h1 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
+            Saved Jobs
+          </h1>
+          {isSaved && (
+            <button className='btn float-right' onClick={() => clearAll()}>Clear All</button>)}
         </div>
         {savedJobs?.length !== 0 ? (
           <div className="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
