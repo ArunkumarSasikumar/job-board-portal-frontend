@@ -33,9 +33,6 @@ export const authOptions: NextAuthOptions = {
           })
         });
         const user = await res.json();
-        if(!user){
-          throw new Error("User Not Found");
-        }
         if(!res.ok) return null;
         return{
           id:user.id,
