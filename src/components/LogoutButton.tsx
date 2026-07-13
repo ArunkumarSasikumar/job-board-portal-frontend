@@ -9,7 +9,7 @@ export default function LogoutButton() {
 
   return (
     <button
-      onClick={() => signOut({ callbackUrl: '/login' })}
+      onClick={() => signOut({ callbackUrl: '/auth' })}
       className="rounded bg-red-600 px-4 py-2 text-white cursor-pointer"
     >
       Logout

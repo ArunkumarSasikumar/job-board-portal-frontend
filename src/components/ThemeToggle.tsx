@@ -38,7 +38,7 @@ export default function ThemeToggle() {
   const hideTheme = pathname?.includes('/apply') ?? false;
 
   return (
-    <div className="float-right">
+    <div className="float-right h-0">
       {!hideTheme && (
         <button
           className="btn float-right"

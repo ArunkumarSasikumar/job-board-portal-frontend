@@ -9,7 +9,8 @@ import { useEffect, useMemo, useState, useTransition } from 'react';
 import useDebounceValue from '../hooks/useDebouncedValue';
 import { lastViewedJobStore } from '../store/lastViewedJobStore';
 import Link from 'next/link';
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export type JobTypeFilter = 'All' | JobType;
 
@@ -29,13 +30,12 @@ type JobVariables = {
 };
 
 export default function HomeClient() {
+  const router = useRouter();
   const {data: session, status} = useSession();
   useEffect(()=>{
     if(status==="loading") return;
     if(status==="unauthenticated"){
-      signIn(undefined,{
-        callbackUrl:'/'
-      });
+      router.push("/auth")
     }
   },[status]);
 

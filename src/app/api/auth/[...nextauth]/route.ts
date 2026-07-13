@@ -33,7 +33,9 @@ export const authOptions: NextAuthOptions = {
           })
         });
         const user = await res.json();
-        if(!res.ok) return null;
+        if(!res.ok){
+          return null;
+        };
         return{
           id:user.id,
           email:user.email

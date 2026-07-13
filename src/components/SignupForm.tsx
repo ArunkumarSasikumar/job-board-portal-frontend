@@ -5,12 +5,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
-export default function LoginForm() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const callbackUrl = searchParams.get('callbackUrl') || '/';
-
+export default function SignupForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -18,7 +13,7 @@ export default function LoginForm() {
   const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$%&*!])(?=.*[^A-Za-z\d]).{6,}$/;
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setError('');
@@ -33,30 +28,39 @@ export default function LoginForm() {
       return;
     }
 
-    const result = await signIn('credentials', {
-      email,
-      password,
-      redirect:false,
-      callbackUrl,
-    });
+    const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/signup`,{
+        method:'POST',
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            email:email,
+            password:password
+        })
+    })
 
-    if (result?.error) {
-      console.log(result);
-      setError(result.error);
-      return;
+    const data = await result.json();
+
+    if(!result.ok){
+        setError(data.message)
     }
 
-    router.push(callbackUrl);
-    router.refresh();
+    if(result.ok){
+        await signIn('credentials',{
+            email,
+            password,
+            callbackUrl:'/login'
+        })
+    }
   };
 
   return (
     <form
-      onSubmit={handleLogin}
+      onSubmit={handleSubmit}
       className="w-full max-w-sm rounded-xl border p-6 shadow bg-[var(--card-bg)]"
     >
       <h1 className="mb-4 text-2xl font-bold text-[var(--text-color)]">
-        Login
+        Register
       </h1>
 
       {error && (
@@ -106,10 +110,10 @@ export default function LoginForm() {
         className="w-full cursor-pointer btn rounded px-4 py-2 text-white"
         disabled={!email || !password}
       >
-        Login
+        Create Account
       </button>
       <p>
-        New User? <Link href={'/signup'}>Signup</Link>
+        Already have an Account? <Link href={'/login'}>Login</Link>
       </p>
     </form>
   );
